@@ -21,8 +21,7 @@ namespace FilmesAPI.Controllers
             filme.Id = id++;
             filmes.Add(filme);
 
-            //status 201 e retorna o location do filme recém criado
-
+            //status 201 e retorna o location do filme recém criado - trata-se de uma boa prática
             return CreatedAtAction(nameof(RecuperaFilmePorId), new { Id = filme.Id }, filme);
         }
 
