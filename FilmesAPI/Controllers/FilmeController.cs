@@ -16,23 +16,35 @@ namespace FilmesAPI.Controllers
         private static int id = 1;
 
         [HttpPost]
-        public void AdicionaFilme([FromBody] Filme filme)
+        public IActionResult AdicionaFilme([FromBody] Filme filme)
         {
-            filmes.Add(filme);
             filme.Id = id++;
-            Console.WriteLine(filme.Titulo);
+            filmes.Add(filme);
+
+            //status 201 e retorna o location do filme recém criado
+
+            return CreatedAtAction(nameof(RecuperaFilmePorId), new { Id = filme.Id }, filme);
         }
 
         [HttpGet]
-        public IEnumerable<Filme> RecuperaFilmes()
+        public IActionResult RecuperaFilmes()
         {
-            return filmes;
+            //se não tem nenhum filme criado, retorna um array vazio com status 200, pois a requisição deu certo
+            //apesar de não ter filmes criados
+            return Ok(filmes);
         }
 
         [HttpGet("{id}")]
-        public Filme RecuperaFilmePorId(int id)
+        public IActionResult RecuperaFilmePorId(int id)
         {
-            return filmes.FirstOrDefault(filme => filme.Id == id);
+            Filme filme = filmes.FirstOrDefault(filme => filme.Id == id);
+            if (filme != null)
+            {
+                return Ok(filme);
+            }
+
+            //se não tem o filme, retorna 404
+            return NotFound();
         }
     }
 }
